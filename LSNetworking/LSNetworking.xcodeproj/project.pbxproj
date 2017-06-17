@@ -29,6 +29,7 @@
 		513DCCCA1EF5232D0017B2BC /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCB71EF5232D0017B2BC /* UIProgressView+AFNetworking.m */; };
 		513DCCCB1EF5232D0017B2BC /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCB91EF5232D0017B2BC /* UIRefreshControl+AFNetworking.m */; };
 		513DCCCC1EF5232D0017B2BC /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCBB1EF5232D0017B2BC /* UIWebView+AFNetworking.m */; };
+		513DCCD01EF52A310017B2BC /* LSNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCCF1EF52A310017B2BC /* LSNetworking.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,8 @@
 		513DCCB91EF5232D0017B2BC /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		513DCCBA1EF5232D0017B2BC /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		513DCCBB1EF5232D0017B2BC /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
+		513DCCCE1EF52A310017B2BC /* LSNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNetworking.h; sourceTree = "<group>"; };
+		513DCCCF1EF52A310017B2BC /* LSNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNetworking.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +136,8 @@
 		513DCC941EF522650017B2BC /* LSNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				513DCCCE1EF52A310017B2BC /* LSNetworking.h */,
+				513DCCCF1EF52A310017B2BC /* LSNetworking.m */,
 			);
 			path = LSNetworking;
 			sourceTree = "<group>";
@@ -274,6 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				513DCCD01EF52A310017B2BC /* LSNetworking.m in Sources */,
 				513DCCC11EF5232D0017B2BC /* AFURLSessionManager.m in Sources */,
 				513DCC851EF521580017B2BC /* ViewController.m in Sources */,
 				513DCCC31EF5232D0017B2BC /* README.md in Sources */,
