@@ -6,6 +6,10 @@
 //  Copyright © 2017年 LSRain. All rights reserved.
 //
 
+/**
+ pod 'AFNetworking', '~> 3.1.0'
+ */
+
 #import "ViewController.h"
 
 @interface ViewController ()
