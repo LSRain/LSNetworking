@@ -9,9 +9,9 @@
 #import "LSNetworking.h"
 
 #ifdef DEBUG
-#   define LSLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+# define LSLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
-#   define LSLog(...)
+# define LSLog(...)
 #endif
 
 static NSMutableArray<NSURLSessionDataTask *> *tasks;
