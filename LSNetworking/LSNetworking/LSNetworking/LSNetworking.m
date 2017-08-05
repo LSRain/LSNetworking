@@ -11,7 +11,7 @@
 #ifdef DEBUG
 #   define LSLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
-#   define CCPLog(...)
+#   define LSLog(...)
 #endif
 
 static NSMutableArray<NSURLSessionDataTask *> *tasks;
@@ -36,12 +36,12 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return tasks;
 }
 
-+ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail{
++ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
     
     return [self baseRequestType:httpMethod url:url params:params success:success fail:fail];
 }
 
-+ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(CCPUploadProgress)progress success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail{
++ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
     // Is there any Chinese in the address?
     NSString *urlStr=[NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     
@@ -77,7 +77,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return url ? sessionTask : nil;
 }
 
-+ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(CCPDownloadProgress )progressBlock success:(CCPResponseSuccess )success failure:(CCPResponseFail )fail{
++ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail{
     
     if (url==nil) {
         return nil;
@@ -142,7 +142,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     
 }
 
-+ (LSURLSessionTask *)baseRequestType:(LSHTTPMethod)type url:(NSString *)url params:(NSDictionary *)params success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail{
++ (LSURLSessionTask *)baseRequestType:(LSHTTPMethod)type url:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
     // Is there any Chinese in the address?
     NSString *urlStr = [NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     

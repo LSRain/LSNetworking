@@ -27,13 +27,13 @@ typedef enum HttpMethod {
     POST
 } LSHTTPMethod;
 
-typedef void( ^ CCPResponseSuccess)(id response);
-typedef void( ^ CCPResponseFail)(NSError *error);
+typedef void( ^ LSResponseSuccess)(id response);
+typedef void( ^ LSResponseFail)(NSError *error);
 
-typedef void( ^ CCPUploadProgress)(int64_t bytesProgress,
+typedef void( ^ LSUploadProgress)(int64_t bytesProgress,
 int64_t totalBytesProgress);
 
-typedef void( ^ CCPDownloadProgress)(int64_t bytesProgress,
+typedef void( ^ LSDownloadProgress)(int64_t bytesProgress,
 int64_t totalBytesProgress);
 
 
@@ -71,7 +71,7 @@ typedef NSURLSessionTask LSURLSessionTask;
  @param fail fail
  @return Request the task object
  */
-+(LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail;
++ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
 
 /**
  The upload image method supports multiple uploads and leaflets
@@ -86,7 +86,7 @@ typedef NSURLSessionTask LSURLSessionTask;
  @param fail fail
  @return Request the task object
  */
-+ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(CCPUploadProgress)progress success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail;
++ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
 
 /**
  Download the file method
@@ -98,6 +98,6 @@ typedef NSURLSessionTask LSURLSessionTask;
  @param fail fail
  @return Request the task object
  */
-+ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(CCPDownloadProgress )progressBlock success:(CCPResponseSuccess )success failure:(CCPResponseFail )fail;
++ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail;
 
 @end
