@@ -62,12 +62,6 @@ typedef NSURLSessionTask LSURLSessionTask;
 + (LSNetworkStatu)checkNetStatus;
 
 /**
- *  Whether there is a network connection
- */
-+ (BOOL) isHaveNetwork;
-
-
-/**
  Use GET/POST request data
 
  @param httpMethod GET/POST

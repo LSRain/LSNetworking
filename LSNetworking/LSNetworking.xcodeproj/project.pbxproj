@@ -19,7 +19,6 @@
 		513DCCC01EF5232D0017B2BC /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCA21EF5232D0017B2BC /* AFURLResponseSerialization.m */; };
 		513DCCC11EF5232D0017B2BC /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCA41EF5232D0017B2BC /* AFURLSessionManager.m */; };
 		513DCCC21EF5232D0017B2BC /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 513DCCA51EF5232D0017B2BC /* LICENSE */; };
-		513DCCC31EF5232D0017B2BC /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCA61EF5232D0017B2BC /* README.md */; };
 		513DCCC41EF5232D0017B2BC /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCA91EF5232D0017B2BC /* AFAutoPurgingImageCache.m */; };
 		513DCCC51EF5232D0017B2BC /* AFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCAB1EF5232D0017B2BC /* AFImageDownloader.m */; };
 		513DCCC61EF5232D0017B2BC /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 513DCCAD1EF5232D0017B2BC /* AFNetworkActivityIndicatorManager.m */; };
@@ -56,7 +55,6 @@
 		513DCCA31EF5232D0017B2BC /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		513DCCA41EF5232D0017B2BC /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
 		513DCCA51EF5232D0017B2BC /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		513DCCA61EF5232D0017B2BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		513DCCA81EF5232D0017B2BC /* AFAutoPurgingImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFAutoPurgingImageCache.h; sourceTree = "<group>"; };
 		513DCCA91EF5232D0017B2BC /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFAutoPurgingImageCache.m; sourceTree = "<group>"; };
 		513DCCAA1EF5232D0017B2BC /* AFImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageDownloader.h; sourceTree = "<group>"; };
@@ -155,7 +153,6 @@
 			children = (
 				513DCC971EF5232D0017B2BC /* AFNetworking */,
 				513DCCA51EF5232D0017B2BC /* LICENSE */,
-				513DCCA61EF5232D0017B2BC /* README.md */,
 				513DCCA71EF5232D0017B2BC /* UIKit+AFNetworking */,
 			);
 			path = AFNetworking;
@@ -282,7 +279,6 @@
 				513DCCD01EF52A310017B2BC /* LSNetworking.m in Sources */,
 				513DCCC11EF5232D0017B2BC /* AFURLSessionManager.m in Sources */,
 				513DCC851EF521580017B2BC /* ViewController.m in Sources */,
-				513DCCC31EF5232D0017B2BC /* README.md in Sources */,
 				513DCC821EF521580017B2BC /* AppDelegate.m in Sources */,
 				513DCCBD1EF5232D0017B2BC /* AFNetworkReachabilityManager.m in Sources */,
 				513DCC7F1EF521580017B2BC /* main.m in Sources */,
@@ -455,6 +451,7 @@
 				513DCC931EF521580017B2BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

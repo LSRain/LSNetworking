@@ -15,8 +15,8 @@
 #endif
 
 static NSMutableArray<NSURLSessionDataTask *> *tasks;
-
 @implementation LSNetworking
+
 
 + (LSNetworking *)sharedLSNetworking{
     static LSNetworking *handler = nil;
@@ -42,7 +42,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 }
 
 + (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(CCPUploadProgress)progress success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail{
-    /// Is there any Chinese in the address?
+    // Is there any Chinese in the address?
     NSString *urlStr=[NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     
     AFHTTPSessionManager *manager=[self getAFManager];
@@ -75,9 +75,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     sessionTask ? [[self tasks] addObject:sessionTask] : nil;
     
     return url ? sessionTask : nil;
-    
 }
-
 
 + (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(CCPDownloadProgress )progressBlock success:(CCPResponseSuccess )success failure:(CCPResponseFail )fail{
     
@@ -120,7 +118,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         if (error == nil) {
             
             if (success) {
-                /// Returns the full path
+                // Returns the full path
                 success([filePath path]);
             }
             
@@ -134,7 +132,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         }
     }];
     
-    /// start download
+    // start download
     [sessionTask resume];
     if (sessionTask) {
         [[self tasks] addObject:sessionTask];
@@ -145,7 +143,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 }
 
 + (LSURLSessionTask *)baseRequestType:(LSHTTPMethod)type url:(NSString *)url params:(NSDictionary *)params success:(CCPResponseSuccess)success fail:(CCPResponseFail)fail{
-    /// Is there any Chinese in the address?
+    // Is there any Chinese in the address?
     NSString *urlStr = [NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     
     AFHTTPSessionManager *manager=[self getAFManager];
@@ -193,7 +191,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     sessionTask ? [[self tasks] addObject:sessionTask] : nil;
     
     return url ? sessionTask : nil;
-    
 }
 
 + (AFHTTPSessionManager *)getAFManager{
@@ -203,12 +200,12 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
         httpManager = [AFHTTPSessionManager manager];
         
-        /// Set the return data to json
+        // Set the return data to json
         httpManager.responseSerializer = [AFJSONResponseSerializer serializer];
         httpManager.requestSerializer = [AFHTTPRequestSerializer serializer];
         
-        /// set NSData
-        //httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        // set NSData
+        // httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         
         httpManager.requestSerializer.stringEncoding = NSUTF8StringEncoding;
         httpManager.requestSerializer.timeoutInterval= 30;
@@ -229,29 +226,27 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return httpManager;
 }
 
-#pragma makr - 开始监听程序在运行中的网络连接变化
-+ (void)startMonitoring
-{
-    // 1.获得网络监控的管理者
+#pragma makr - Start listening for changes in the network connection during running
+
++ (void)startMonitoring{
     AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
-    // 2.设置网络状态改变后的处理
     [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        // 当网络状态改变了, 就会调用这个block
+        // When the network state changes, it will call the block
         switch (status)
         {
-            case AFNetworkReachabilityStatusUnknown: // 未知网络
+            case AFNetworkReachabilityStatusUnknown: // Unknown network
                 
                 [LSNetworking sharedLSNetworking].networkStats=StatusUnknown;
                 
                 break;
                 
-            case AFNetworkReachabilityStatusNotReachable: // 没有网络(断网)
+            case AFNetworkReachabilityStatusNotReachable: // No internet(broken network)
                 
                 [LSNetworking sharedLSNetworking].networkStats=StatusNotReachable;
                 
                 break;
                 
-            case AFNetworkReachabilityStatusReachableViaWWAN: // 手机自带网络
+            case AFNetworkReachabilityStatusReachableViaWWAN: // Mobile phone network
                 
                 [LSNetworking sharedLSNetworking].networkStats=StatusReachableViaWWAN;
                 
@@ -269,7 +264,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 }
 
 + (LSNetworkStatu)checkNetStatus {
-    
     [self startMonitoring];
     
     if ([LSNetworking sharedLSNetworking].networkStats == StatusReachableViaWiFi) {
@@ -292,29 +286,12 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     
 }
 
-
-+ (BOOL) isHaveNetwork {
-    
-//    Reachability *conn = [Reachability reachabilityForInternetConnection];
-//    
-//    if ([conn currentReachabilityStatus] == NotReachable) {
-//        
-//        return NO;
-//        
-//    } else {
-//        
-        return YES;
-//    }
-}
-
-
 + (NSString *)strUTF8Encoding:(NSString *)str{
     
-    return [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return  [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:str]];
 }
 
-- (void)dealloc
-{
+- (void)dealloc{
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
 
