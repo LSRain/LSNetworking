@@ -18,6 +18,11 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 @implementation LSNetworking
 
 
+- (void)dealloc{
+    
+    [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
+}
+
 + (LSNetworking *)sharedLSNetworking{
     static LSNetworking *handler = nil;
     static dispatch_once_t onceToken;
@@ -78,8 +83,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 }
 
 + (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail{
-    
-    if (url==nil) {
+    if (url == nil) {
         return nil;
     }
     
@@ -87,7 +91,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     AFHTTPSessionManager *manager = [self getAFManager];
     
     LSURLSessionTask *sessionTask = nil;
-    
     sessionTask = [manager downloadTaskWithRequest:downloadRequest progress:^(NSProgress * _Nonnull downloadProgress) {
         
         LSLog(@"Download progress--%.1f",1.0 * downloadProgress.completedUnitCount/downloadProgress.totalUnitCount);
@@ -112,22 +115,15 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         }
         
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-        
         [[self tasks] removeObject:sessionTask];
-        
         if (error == nil) {
-            
             if (success) {
                 // Returns the full path
                 success([filePath path]);
             }
-            
         } else {
-            
             if (fail) {
-                
                 fail(error);
-                
             }
         }
     }];
@@ -187,7 +183,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         default:
             break;
     }
-    
     sessionTask ? [[self tasks] addObject:sessionTask] : nil;
     
     return url ? sessionTask : nil;
@@ -235,27 +230,16 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         switch (status)
         {
             case AFNetworkReachabilityStatusUnknown: // Unknown network
-                
                 [LSNetworking sharedLSNetworking].networkStats=StatusUnknown;
-                
                 break;
-                
             case AFNetworkReachabilityStatusNotReachable: // No internet(broken network)
-                
                 [LSNetworking sharedLSNetworking].networkStats=StatusNotReachable;
-                
                 break;
-                
             case AFNetworkReachabilityStatusReachableViaWWAN: // Mobile phone network
-                
                 [LSNetworking sharedLSNetworking].networkStats=StatusReachableViaWWAN;
-                
                 break;
-                
             case AFNetworkReachabilityStatusReachableViaWiFi: // WIFI
-                
                 [LSNetworking sharedLSNetworking].networkStats=StatusReachableViaWiFi;
-                
                 break;
         }
     }];
@@ -267,23 +251,14 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     [self startMonitoring];
     
     if ([LSNetworking sharedLSNetworking].networkStats == StatusReachableViaWiFi) {
-        
         return StatusReachableViaWiFi;
-        
     } else if ([LSNetworking sharedLSNetworking].networkStats == StatusNotReachable) {
-        
         return StatusNotReachable;
-        
     } else if ([LSNetworking sharedLSNetworking].networkStats == StatusReachableViaWWAN) {
-        
         return StatusReachableViaWWAN;
-        
     } else {
-        
         return StatusUnknown;
-        
     }
-    
 }
 
 + (NSString *)strUTF8Encoding:(NSString *)str{
@@ -291,8 +266,74 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return  [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:str]];
 }
 
-- (void)dealloc{
-    [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
+# pragma mark - uploadFile
+
+- (void)uploadFileWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePath:(NSString *)filePath{
+    [self uploadFilesWithURLString:URLString serverFileName:serverFileName filePaths:@[filePath] textDict:nil];
+}
+
+- (void)uploadFilesWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePaths:(NSArray *)filePaths textDict:(NSDictionary *)textDict{
+    NSURL *URL = [NSURL URLWithString:URLString];
+    
+    NSMutableURLRequest *requestM = [NSMutableURLRequest requestWithURL:URL];
+    requestM.HTTPMethod = @"POST";
+    // Request the contents of the first inside the Content-Type
+    [requestM setValue:@"multipart/form-data; boundary=lsrequest" forHTTPHeaderField:@"Content-Type"];
+    
+    // Request body
+    NSData *fromData = [self getfromDataServerFileName:serverFileName filePaths:filePaths textDict:textDict];
+    
+    [[[NSURLSession sharedSession] uploadTaskWithRequest:requestM fromData:fromData completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error == nil && data != nil) {
+            // 反序列化
+            NSArray *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            LSLog(@"%@",result);
+        } else {
+            LSLog(@"%@",error);
+        }
+    }] resume];
+}
+
+- (NSData *)getfromDataServerFileName:(NSString *)serverFileName filePaths:(NSArray *)filePaths textDict:(NSDictionary *)textDict{
+    // Defines a container that splits the entire request body binary
+    NSMutableData *dataM = [NSMutableData data];
+    
+    [filePaths enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        // Staple the file before the binary string
+        NSMutableString *stringM = [NSMutableString string];
+        
+        // The beginning of the file delimiter
+        [stringM appendString:@"--lsrequest\r\n"];
+        // form data
+        [stringM appendFormat:@"Content-Disposition: form-data; name=%@; filename=%@\r\n",serverFileName,[obj lastPathComponent]];
+        // file type
+        [stringM appendString:@"Content-Type: application/octet-stream\r\n"];
+        // Line feed
+        [stringM appendString:@"\r\n"];
+        [dataM appendData:[stringM dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // Bind file to binary
+        NSData *data = [NSData dataWithContentsOfFile:obj];
+        [dataM appendData:data];
+        
+        // Stitching at the end
+        NSString *end = @"\r\n";
+        [dataM appendData:[end dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    
+    // The body of the request
+    [textDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSMutableString *stringM = [NSMutableString string];
+        [stringM appendString:@"--lsrequest\r\n"];
+        [stringM appendFormat:@"Content-Disposition: form-data; name=%@\r\n",key];
+        [stringM appendString:@"\r\n"];
+        [stringM appendFormat:@"%@\r\n",obj];
+        [dataM appendData:[stringM dataUsingEncoding:NSUTF8StringEncoding]];
+    }];
+    NSString *end = @"--lsrequest--";
+    [dataM appendData:[end dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    return dataM.copy;
 }
 
 @end

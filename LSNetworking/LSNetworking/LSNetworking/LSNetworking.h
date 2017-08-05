@@ -100,4 +100,25 @@ typedef NSURLSessionTask LSURLSessionTask;
  */
 + (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail;
 
+# pragma mark - uploadFile
+
+/**
+ Multi-file upload, you can upload text messages
+ 
+ @param URLString      File upload address
+ @param serverFileName The server receives the field name of the file
+ @param filePaths      Multi-file path collection
+ @param textDict       Multi-file upload when the text information
+ */
+- (void)uploadFilesWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePaths:(NSArray *)filePaths textDict:(NSDictionary *)textDict;
+
+/**
+ Single file upload, can not upload text information
+ 
+ @param URLString      File upload address
+ @param serverFileName The server receives the field name of the file
+ @param filePath       The path to the file
+ */
+- (void)uploadFileWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePath:(NSString *)filePath;
+
 @end
