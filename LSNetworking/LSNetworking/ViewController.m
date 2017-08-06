@@ -11,6 +11,7 @@
  */
 
 #import "ViewController.h"
+#import "LSNetworking.h"
 
 @interface ViewController ()
 
@@ -22,6 +23,17 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor redColor];
+    
+    // demo - Please replace the correct URL and parameters
+    NSString *sendURL = @"sendTestURL";
+    NSDictionary *sendDic = @{
+                              @"sendParameTestKey" : @"sendParameTestValue"
+                              };
+    [LSNetworking getOrPostWithType:GET WithUrl:sendURL params:sendDic success:^(id response) {
+        // you can do the data processing here ...
+    } fail:^(NSError *error) {
+        // Abnormal data processing
+    }];
 }
 
 

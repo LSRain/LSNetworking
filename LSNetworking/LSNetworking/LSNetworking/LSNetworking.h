@@ -29,10 +29,8 @@ typedef enum HttpMethod {
 
 typedef void(^LSResponseSuccess)(id response);
 typedef void(^LSResponseFail)(NSError *error);
-typedef void(^LSUploadProgress)(int64_t bytesProgress,
-int64_t totalBytesProgress);
-typedef void(^LSDownloadProgress)(int64_t bytesProgress,
-int64_t totalBytesProgress);
+typedef void(^LSUploadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
+typedef void(^LSDownloadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
 
 typedef NSURLSessionTask LSURLSessionTask;
 
@@ -46,7 +44,6 @@ typedef NSURLSessionTask LSURLSessionTask;
  @return SELF
  */
 + (LSNetworking *)sharedLSNetworking;
-
 
 /**
  *  Turn on network monitoring
