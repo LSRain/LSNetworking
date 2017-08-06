@@ -4,15 +4,15 @@ Provides commonly used network processing, network status monitoring, data reque
 ## Introduction
 The tool provides the usual network processing
 
-* The network request encapsulates [AFN] (https://github.com/AFNetworking/AFNetworking), and the current version is `3.1.0`.
+* The network request encapsulates[AFN](https://github.com/AFNetworking/AFNetworking), and the current version is `3.1.0`.
 * File upload package `NSURLSession`
 
-### use
+### Scenes
 * Network status monitoring
 * `GET / POST` data request
 * `Upload / download` file / picture
 
-### use
+### How to use
 For commonly used network requests, you can use the following methods directly
 
 ```objc
@@ -59,7 +59,7 @@ File upload, you need to create a tool instance, and then call the object method
 * 其中网络请求封装了[AFN](https://github.com/AFNetworking/AFNetworking),当前项目中使用到的版本为`3.1.0`.
 * 文件上传封装了`NSURLSession`
 
-### 用途
+### 场景
 * 网络状态监测
 * `GET/POST`数据请求
 * `上传/下载`文件/图片
