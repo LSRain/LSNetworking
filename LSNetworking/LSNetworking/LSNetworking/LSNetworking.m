@@ -285,7 +285,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     
     [[[NSURLSession sharedSession] uploadTaskWithRequest:requestM fromData:fromData completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error == nil && data != nil) {
-            // 反序列化
+            // Deserialization
             NSArray *result = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
             LSLog(@"%@",result);
         } else {

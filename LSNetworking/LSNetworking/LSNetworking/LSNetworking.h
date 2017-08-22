@@ -10,16 +10,16 @@
 #import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
-/// 网络状态 network status
+/// network status
 typedef enum : NSUInteger {
-    StatusUnknown           = -1,   // 未知网络 Unknown network
-    StatusNotReachable      = 0,    // 没有网络 No internet
-    StatusReachableViaWWAN  = 1,    // 手机自带网络 Mobile phone network
+    StatusUnknown           = -1,   // Unknown network
+    StatusNotReachable      = 0,    // No internet
+    StatusReachableViaWWAN  = 1,    // Mobile phone network
     StatusReachableViaWiFi  = 2     // WIFI
 } LSNetworkStatu;
 
 /**
- * 请求方式 Request mode
+ * Request Mode
  * GET OR POST
  */
 typedef enum HttpMethod {
