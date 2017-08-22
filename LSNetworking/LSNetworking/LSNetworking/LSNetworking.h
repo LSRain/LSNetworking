@@ -43,7 +43,7 @@ typedef NSURLSessionTask LSURLSessionTask;
 
  @return SELF
  */
-+ (LSNetworking *)sharedLSNetworking;
++ (LSNetworking *)sharedNetworking;
 
 /**
  *  Turn on network monitoring

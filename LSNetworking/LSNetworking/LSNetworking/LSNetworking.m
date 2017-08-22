@@ -23,7 +23,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
 
-+ (LSNetworking *)sharedLSNetworking{
++ (LSNetworking *)sharedNetworking{
     static LSNetworking *handler = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -230,16 +230,16 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         switch (status)
         {
             case AFNetworkReachabilityStatusUnknown: // Unknown network
-                [LSNetworking sharedLSNetworking].networkStats=StatusUnknown;
+                [LSNetworking sharedNetworking].networkStats=StatusUnknown;
                 break;
             case AFNetworkReachabilityStatusNotReachable: // No internet(broken network)
-                [LSNetworking sharedLSNetworking].networkStats=StatusNotReachable;
+                [LSNetworking sharedNetworking].networkStats=StatusNotReachable;
                 break;
             case AFNetworkReachabilityStatusReachableViaWWAN: // Mobile phone network
-                [LSNetworking sharedLSNetworking].networkStats=StatusReachableViaWWAN;
+                [LSNetworking sharedNetworking].networkStats=StatusReachableViaWWAN;
                 break;
             case AFNetworkReachabilityStatusReachableViaWiFi: // WIFI
-                [LSNetworking sharedLSNetworking].networkStats=StatusReachableViaWiFi;
+                [LSNetworking sharedNetworking].networkStats=StatusReachableViaWiFi;
                 break;
         }
     }];
@@ -250,11 +250,11 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 + (LSNetworkStatu)checkNetStatus {
     [self startMonitoring];
     
-    if ([LSNetworking sharedLSNetworking].networkStats == StatusReachableViaWiFi) {
+    if ([LSNetworking sharedNetworking].networkStats == StatusReachableViaWiFi) {
         return StatusReachableViaWiFi;
-    } else if ([LSNetworking sharedLSNetworking].networkStats == StatusNotReachable) {
+    } else if ([LSNetworking sharedNetworking].networkStats == StatusNotReachable) {
         return StatusNotReachable;
-    } else if ([LSNetworking sharedLSNetworking].networkStats == StatusReachableViaWWAN) {
+    } else if ([LSNetworking sharedNetworking].networkStats == StatusReachableViaWWAN) {
         return StatusReachableViaWWAN;
     } else {
         return StatusUnknown;
