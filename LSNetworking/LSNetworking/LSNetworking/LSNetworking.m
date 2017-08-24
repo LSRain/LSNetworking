@@ -197,13 +197,13 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         
         // Set the return data to json
         httpManager.responseSerializer = [AFJSONResponseSerializer serializer];
-        httpManager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        httpManager.requestSerializer  = [AFHTTPRequestSerializer serializer];
         
-        // set NSData
+        // Set NSData
         // httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         
-        httpManager.requestSerializer.stringEncoding = NSUTF8StringEncoding;
-        httpManager.requestSerializer.timeoutInterval= 30;
+        httpManager.requestSerializer.stringEncoding  = NSUTF8StringEncoding;
+        httpManager.requestSerializer.timeoutInterval = 30;
         httpManager.responseSerializer.acceptableContentTypes = [
                                                                  NSSet setWithArray:
                                                                 @[
@@ -223,46 +223,35 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 
 #pragma makr - Start listening for changes in the network connection during running
 
-+ (void)startMonitoring{
-    AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
-    [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        // When the network state changes, it will call the block
-        switch (status)
-        {
-            case AFNetworkReachabilityStatusUnknown: // Unknown network
-                [LSNetworking sharedNetworking].networkStats = StatusUnknown;
-                break;
-            case AFNetworkReachabilityStatusNotReachable: // No internet(broken network)
-                [LSNetworking sharedNetworking].networkStats = StatusNotReachable;
-                break;
-            case AFNetworkReachabilityStatusReachableViaWWAN: // Mobile phone network
-                [LSNetworking sharedNetworking].networkStats = StatusReachableViaWWAN;
-                break;
-            case AFNetworkReachabilityStatusReachableViaWiFi: // WIFI
-                [LSNetworking sharedNetworking].networkStats = StatusReachableViaWiFi;
-                break;
-        }
-    }];
-    
-    [mgr startMonitoring];
-}
-
-+ (LSNetworkStatu)checkNetStatus {
-    [self startMonitoring];
-    
-    if ([LSNetworking sharedNetworking].networkStats == StatusReachableViaWiFi) {
-        return StatusReachableViaWiFi;
-    } else if ([LSNetworking sharedNetworking].networkStats == StatusNotReachable) {
-        return StatusNotReachable;
-    } else if ([LSNetworking sharedNetworking].networkStats == StatusReachableViaWWAN) {
-        return StatusReachableViaWWAN;
-    } else {
-        return StatusUnknown;
-    }
++ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
+        [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+            switch (status) {
+                case AFNetworkReachabilityStatusUnknown:
+                    networkStatus ? networkStatus(StatusUnknown) : nil;
+                    LSLog(@"Unknown network...");
+                    break;
+                case AFNetworkReachabilityStatusNotReachable:
+                    networkStatus ? networkStatus(StatusNotReachable) : nil;
+                    LSLog(@"No internet...");
+                    break;
+                case AFNetworkReachabilityStatusReachableViaWWAN:
+                    networkStatus ? networkStatus(StatusReachableViaWWAN) : nil;
+                    LSLog(@"Mobile phone network...");
+                    break;
+                case AFNetworkReachabilityStatusReachableViaWiFi:
+                    networkStatus ? networkStatus(StatusReachableViaWiFi) : nil;
+                    LSLog(@"WIFI...");
+                    break;
+            }
+        }];
+        [mgr startMonitoring];
+    });
 }
 
 + (NSString *)strUTF8Encoding:(NSString *)str{
-
     return  [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:str]];
 }
 

@@ -23,9 +23,10 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor redColor];
+    [LSNetworking checkNetStatusWithBlock:^(LSNetworkStatusType status) {
+        NSLog(@"current netWork: %zd", status);
+    }];
     
-//    [LSNetworking startMonitoring];
-    NSLog(@"The current network environment: %zd", [LSNetworking checkNetStatus]);
     /*
      demo 
         - Please replace the correct URL and parameters
@@ -33,9 +34,9 @@
      */
     NSString *sendURL = @"https://www.baidu.com";
     
-    // If your URL contains parameters, then you can use it like this
     /*
-    NSDictionary *sendDic = @{
+     - If your URL contains parameters, then you can use it like this
+     NSDictionary *sendDic = @{
                               @"sendParameTestKey" : @"sendParameTestValue"
                               };
      */

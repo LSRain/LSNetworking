@@ -11,12 +11,12 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 /// network status
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, LSNetworkStatusType){
     StatusUnknown           = -1,   // Unknown network
     StatusNotReachable      = 0,    // No internet
     StatusReachableViaWWAN  = 1,    // Mobile phone network
     StatusReachableViaWiFi  = 2     // WIFI
-} LSNetworkStatu;
+};
 
 /**
  * Request Mode
@@ -27,16 +27,18 @@ typedef enum HttpMethod {
     POST
 } LSHTTPMethod;
 
+typedef NSURLSessionTask LSURLSessionTask;
+
+# pragma mark - Block
+
 typedef void(^LSResponseSuccess)(id response);
 typedef void(^LSResponseFail)(NSError *error);
 typedef void(^LSUploadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
 typedef void(^LSDownloadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
-
-typedef NSURLSessionTask LSURLSessionTask;
+/// Block of Network State
+typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
 
 @interface LSNetworking : NSObject
-
-@property (nonatomic,assign)LSNetworkStatu networkStats;
 
 /**
  Singleton
@@ -46,14 +48,9 @@ typedef NSURLSessionTask LSURLSessionTask;
 + (LSNetworking *)sharedNetworking;
 
 /**
- *  Turn on network monitoring
+ *  check network status
  */
-+ (void)startMonitoring;
-
-/**
- *  Get network status
- */
-+ (LSNetworkStatu)checkNetStatus;
++ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus;
 
 /**
  Use GET/POST request data
@@ -81,6 +78,8 @@ typedef NSURLSessionTask LSURLSessionTask;
  @return Request the task object
  */
 + (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
+
+# pragma mark - downloadFile
 
 /**
  Download the file method
