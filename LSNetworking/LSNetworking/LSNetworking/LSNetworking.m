@@ -230,16 +230,16 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         switch (status)
         {
             case AFNetworkReachabilityStatusUnknown: // Unknown network
-                [LSNetworking sharedNetworking].networkStats=StatusUnknown;
+                [LSNetworking sharedNetworking].networkStats = StatusUnknown;
                 break;
             case AFNetworkReachabilityStatusNotReachable: // No internet(broken network)
-                [LSNetworking sharedNetworking].networkStats=StatusNotReachable;
+                [LSNetworking sharedNetworking].networkStats = StatusNotReachable;
                 break;
             case AFNetworkReachabilityStatusReachableViaWWAN: // Mobile phone network
-                [LSNetworking sharedNetworking].networkStats=StatusReachableViaWWAN;
+                [LSNetworking sharedNetworking].networkStats = StatusReachableViaWWAN;
                 break;
             case AFNetworkReachabilityStatusReachableViaWiFi: // WIFI
-                [LSNetworking sharedNetworking].networkStats=StatusReachableViaWiFi;
+                [LSNetworking sharedNetworking].networkStats = StatusReachableViaWiFi;
                 break;
         }
     }];

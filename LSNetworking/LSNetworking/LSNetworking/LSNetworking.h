@@ -41,7 +41,7 @@ typedef NSURLSessionTask LSURLSessionTask;
 /**
  Singleton
 
- @return SELF
+ @return Self - Singleton
  */
 + (LSNetworking *)sharedNetworking;
 
