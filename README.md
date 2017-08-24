@@ -16,15 +16,27 @@ The tool provides the usual network processing
 For commonly used network requests, you can use the following methods directly
 
 ```objc
-// demo - Please replace the correct URL and parameters
-NSString *sendURL = @"sendTestURL";
-NSDictionary *sendDic = @{
-                         @"sendParameTestKey" : @"sendParameTestValue"
-                         };
-[LSNetworking getOrPostWithType:GET WithUrl:sendURL params:sendDic success:^(id response) {
+// Detects network status
+[LSNetworking checkNetStatusWithBlock:^(LSNetworkStatusType status) {
+   NSLog(@"current netWork: %zd", status);
+}];
+    
+/*
+demo 
+   - Please replace the correct URL and parameters
+   - You should use a correct URL to return to json format, the following address is returned to a HTML rather than json.
+   - If your URL contains parameters, then you can use it like this
+       NSDictionary *sendDic = @{
+                                   @"sendParameTestKey" : @"sendParameTestValue"
+       };
+*/
+NSString *sendURL = @"https://www.baidu.com";
+[LSNetworking getOrPostWithType:GET WithUrl:sendURL params:nil success:^(id response) {
    // you can do the data processing here ...
+   NSLog(@"Test response: %@", response);
 } fail:^(NSError *error) {
    // Abnormal data processing
+   NSLog(@"error Message: %@", error);
 }];
 ```
 
@@ -68,15 +80,27 @@ File upload, you need to create a tool instance, and then call the object method
 对于常用的网络请求，你可以直接使用如下的方式
 
 ```objc
-// demo - Please replace the correct URL and parameters
-NSString *sendURL = @"sendTestURL";
-NSDictionary *sendDic = @{
-                         @"sendParameTestKey" : @"sendParameTestValue"
-                         };
-[LSNetworking getOrPostWithType:GET WithUrl:sendURL params:sendDic success:^(id response) {
+// Detects network status
+[LSNetworking checkNetStatusWithBlock:^(LSNetworkStatusType status) {
+   NSLog(@"current netWork: %zd", status);
+}];
+    
+/*
+demo 
+   - Please replace the correct URL and parameters
+   - You should use a correct URL to return to json format, the following address is returned to a HTML rather than json.
+   - If your URL contains parameters, then you can use it like this
+       NSDictionary *sendDic = @{
+                                   @"sendParameTestKey" : @"sendParameTestValue"
+       };
+*/
+NSString *sendURL = @"https://www.baidu.com";
+[LSNetworking getOrPostWithType:GET WithUrl:sendURL params:nil success:^(id response) {
    // you can do the data processing here ...
+   NSLog(@"Test response: %@", response);
 } fail:^(NSError *error) {
    // Abnormal data processing
+   NSLog(@"error Message: %@", error);
 }];
 ```
 

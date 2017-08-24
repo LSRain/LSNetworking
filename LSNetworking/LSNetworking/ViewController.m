@@ -23,6 +23,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor redColor];
+    // Detects network status
     [LSNetworking checkNetStatusWithBlock:^(LSNetworkStatusType status) {
         NSLog(@"current netWork: %zd", status);
     }];
