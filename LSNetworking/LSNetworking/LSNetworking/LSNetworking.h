@@ -29,7 +29,7 @@ typedef enum HttpMethod {
 
 typedef NSURLSessionTask LSURLSessionTask;
 
-# pragma mark - Block
+# pragma mark - Block definition
 
 typedef void(^LSResponseSuccess)(id response);
 typedef void(^LSResponseFail)(NSError *error);
