@@ -29,6 +29,15 @@
     }];
     
     /*
+     Whether there is a network
+     - Where the delay of 0.1s and then the implementation is because the program has just started, may be related to the completion of the network service has not yet completed (also may be AFN BUG)
+     - Cause the demo to detect the network status is not correct, this is only to demonstrate the functionality of the demo, in actual use can be used directly to determine the one-time network, do not have to do delay delay operation
+     */
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"\n Whether there is a network ~> %zd", [LSNetworking isNetwork]);
+    });
+
+    /*
      demo 
         - Please replace the correct URL and parameters
         - You should use a correct URL to return to json format, the following address is returned to a HTML rather than json.
@@ -45,15 +54,6 @@
         // Abnormal data processing
         NSLog(@"error Message: %@", error);
     }];
-    
-    /*
-     Whether there is a network
-        - Where the delay of 0.1s and then the implementation is because the program has just started, may be related to the completion of the network service has not yet completed (also may be AFN BUG)
-        - Cause the demo to detect the network status is not correct, this is only to demonstrate the functionality of the demo, in actual use can be used directly to determine the one-time network, do not have to do delay delay operation
-     */
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSLog(@"Whether there is a network ~> %zd", [LSNetworking isNetwork]);
-    });
 }
 
 
