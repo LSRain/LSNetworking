@@ -33,7 +33,10 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 }
 
 + (BOOL)isNetwork {
-    return [AFNetworkReachabilityManager sharedManager].reachable;
+    AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
+    [mgr startMonitoring];
+    
+    return mgr.reachable;
 }
 
 + (NSMutableArray *)tasks{
