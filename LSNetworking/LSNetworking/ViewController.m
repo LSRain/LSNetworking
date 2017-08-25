@@ -20,27 +20,13 @@
 @implementation ViewController
 
 
+/**
+ Detailed use and description can be found in `LSNetworking.h`
+ */
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor redColor];
-    /*
-     demo 
-        - Please replace the correct URL and parameters
-        - You should use a correct URL to return to json format, the following address is returned to a HTML rather than json.
-        - If your URL contains parameters, then you can use it like this
-            NSDictionary *sendDic = @{
-                                        @"sendParameTestKey" : @"sendParameTestValue"
-            };
-     */
-    NSString *sendURL = @"https://www.baidu.com";
-    [LSNetworking getOrPostWithType:GET WithUrl:sendURL params:nil success:^(id response) {
-        // you can do the data processing here ...
-        NSLog(@"Test response: %@", response);
-    } fail:^(NSError *error) {
-        // Abnormal data processing
-        NSLog(@"error Message: %@", error);
-    }];
 }
 
 

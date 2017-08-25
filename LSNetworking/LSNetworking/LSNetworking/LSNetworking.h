@@ -29,6 +29,19 @@
  
  Note that if you use `isNetwork` to get the current network status, then you need to have a delay, and before that, you need to call`checkNetStatusWithBlock:`this callback to open the network monitoring. So the right way is this Two methods are used together.
 
+ ## Network request
+    - `getOrPostWithType:WithUrl:params:success:fail:`
+ 
+ The method provides a common `GET / POST` data request, but please note that your URL return result should be a correct`JSON` data type. In Development environment, you can define the parameters of the dictionary type you need and assign To `params`.
+ 
+ ```objc
+     NSString *sendURL = @"APIURL";
+     [LSNetworking getOrPostWithType:GET WithUrl:sendURL params:nil success:^(id response) {
+        // you can do the data processing here ...
+     } fail:^(NSError *error) {
+        // Abnormal data processing
+     }];
+ ```
  */
 
 #pragma mark - Typedef definition
