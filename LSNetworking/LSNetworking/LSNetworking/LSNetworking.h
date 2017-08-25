@@ -81,23 +81,13 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
 @interface LSNetworking : NSObject
 
 /**
- Whether there is a network
- 
- @return Whether there is a network
- */
-+ (BOOL)isNetwork;
-
-/**
  Singleton
 
  @return Self - Singleton
  */
 + (LSNetworking *)sharedNetworking;
 
-/**
- *  check network status
- */
-+ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus;
+#pragma mark - Network request
 
 /**
  Use GET/POST request data
@@ -110,6 +100,23 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @return Request the task object
  */
 + (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
+
+#pragma mark - Network monitoring
+
+/**
+ *  check network status
+ */
++ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus;
+
+/**
+ Whether there is a network
+ - It should be noted that this method must be used with `checkNetStatusWithBlock:`
+ 
+ @return Whether there is a network
+ */
++ (BOOL)isNetwork;
+
+# pragma mark - Upload and download
 
 /**
  The upload image method supports multiple uploads and leaflets
@@ -126,8 +133,6 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  */
 + (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
 
-# pragma mark - downloadFile
-
 /**
  Download the file method
 
@@ -139,8 +144,6 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @return Request the task object
  */
 + (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail;
-
-# pragma mark - uploadFile
 
 /**
  Multi-file upload, you can upload text messages
