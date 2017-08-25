@@ -32,10 +32,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return handler;
 }
 
-+ (BOOL)isNetwork {
-    return [AFNetworkReachabilityManager sharedManager].reachable;
-}
-
 + (NSMutableArray *)tasks{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -45,8 +41,124 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 }
 
 + (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
-    
     return [self baseRequestType:httpMethod url:url params:params success:success fail:fail];
+}
+
++ (AFHTTPSessionManager *)getAFManager{
+    static AFHTTPSessionManager *httpManager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+        httpManager = [AFHTTPSessionManager manager];
+        
+        // Set the return data to json
+        httpManager.responseSerializer = [AFJSONResponseSerializer serializer];
+        httpManager.requestSerializer  = [AFHTTPRequestSerializer serializer];
+        
+        // Set NSData
+        // httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        
+        httpManager.requestSerializer.stringEncoding  = NSUTF8StringEncoding;
+        httpManager.requestSerializer.timeoutInterval = 30;
+        httpManager.responseSerializer.acceptableContentTypes = [
+                                                                 NSSet setWithArray:
+                                                                 @[
+                                                                   @"application/json",
+                                                                   @"text/html",
+                                                                   @"text/json",
+                                                                   @"text/plain",
+                                                                   @"text/javascript",
+                                                                   @"text/xml",
+                                                                   @"image/*"
+                                                                   ]
+                                                                 ];
+    });
+    
+    return httpManager;
+}
+
++ (LSURLSessionTask *)baseRequestType:(LSHTTPMethod)type url:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
+    // Is there any Chinese in the address?
+    NSString *urlStr = [NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
+    
+    AFHTTPSessionManager *manager=[self getAFManager];
+    LSURLSessionTask *sessionTask=nil;
+    switch (type) {
+        case GET:
+        {
+            sessionTask = [manager GET:urlStr parameters:params progress:^(NSProgress * _Nonnull downloadProgress) {
+                
+            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+                if (success) {
+                    success(responseObject);
+                }
+                
+                [[self tasks] removeObject:sessionTask];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                if (fail) {
+                    fail(error);
+                }
+                [[self tasks] removeObject:sessionTask];
+            }];
+        }
+            break;
+        case POST:
+        {
+            sessionTask = [manager POST:url parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
+            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                if (success) {
+                    success(responseObject);
+                }
+                [[self tasks] removeObject:sessionTask];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                if (fail) {
+                    fail(error);
+                }
+                [[self tasks] removeObject:sessionTask];
+            }];
+        }
+            break;
+        default:
+            break;
+    }
+    sessionTask ? [[self tasks] addObject:sessionTask] : nil;
+    
+    return url ? sessionTask : nil;
+}
+
+#pragma makr - Start listening for changes in the network connection during running
+
++ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
+        [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+            switch (status) {
+                case AFNetworkReachabilityStatusUnknown:
+                    networkStatus ? networkStatus(StatusUnknown) : nil;
+                    LSLog(@"Unknown network...");
+                    break;
+                case AFNetworkReachabilityStatusNotReachable:
+                    networkStatus ? networkStatus(StatusNotReachable) : nil;
+                    LSLog(@"No internet...");
+                    break;
+                case AFNetworkReachabilityStatusReachableViaWWAN:
+                    networkStatus ? networkStatus(StatusReachableViaWWAN) : nil;
+                    LSLog(@"Mobile phone network...");
+                    break;
+                case AFNetworkReachabilityStatusReachableViaWiFi:
+                    networkStatus ? networkStatus(StatusReachableViaWiFi) : nil;
+                    LSLog(@"WIFI...");
+                    break;
+            }
+        }];
+        [mgr startMonitoring];
+    });
+}
+
++ (BOOL)isNetwork {
+    return [AFNetworkReachabilityManager sharedManager].reachable;
 }
 
 + (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
@@ -79,7 +191,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
         fail ? fail(error) : nil;
         [[self tasks] removeObject:sessionTask];
     }];
-    
     sessionTask ? [[self tasks] addObject:sessionTask] : nil;
     
     return url ? sessionTask : nil;
@@ -138,124 +249,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     }
     
     return sessionTask;
-    
-}
-
-+ (LSURLSessionTask *)baseRequestType:(LSHTTPMethod)type url:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
-    // Is there any Chinese in the address?
-    NSString *urlStr = [NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
-    
-    AFHTTPSessionManager *manager=[self getAFManager];
-    LSURLSessionTask *sessionTask=nil;
-    switch (type) {
-        case GET:
-            {
-                sessionTask = [manager GET:urlStr parameters:params progress:^(NSProgress * _Nonnull downloadProgress) {
-                    
-                } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                    
-                    if (success) {
-                        success(responseObject);
-                    }
-                    
-                    [[self tasks] removeObject:sessionTask];
-                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                    if (fail) {
-                        fail(error);
-                    }
-                    [[self tasks] removeObject:sessionTask];
-                }];
-            }
-            break;
-        case POST:
-            {
-                sessionTask = [manager POST:url parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
-                } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                    if (success) {
-                        success(responseObject);
-                    }
-                    [[self tasks] removeObject:sessionTask];
-                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                    if (fail) {
-                        fail(error);
-                    }
-                    [[self tasks] removeObject:sessionTask];
-                }];
-            }
-            break;
-        default:
-            break;
-    }
-    sessionTask ? [[self tasks] addObject:sessionTask] : nil;
-    
-    return url ? sessionTask : nil;
-}
-
-+ (AFHTTPSessionManager *)getAFManager{
-    static AFHTTPSessionManager *httpManager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-        httpManager = [AFHTTPSessionManager manager];
-        
-        // Set the return data to json
-        httpManager.responseSerializer = [AFJSONResponseSerializer serializer];
-        httpManager.requestSerializer  = [AFHTTPRequestSerializer serializer];
-        
-        // Set NSData
-        // httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        
-        httpManager.requestSerializer.stringEncoding  = NSUTF8StringEncoding;
-        httpManager.requestSerializer.timeoutInterval = 30;
-        httpManager.responseSerializer.acceptableContentTypes = [
-                                                                 NSSet setWithArray:
-                                                                @[
-                                                                  @"application/json",
-                                                                  @"text/html",
-                                                                  @"text/json",
-                                                                  @"text/plain",
-                                                                  @"text/javascript",
-                                                                  @"text/xml",
-                                                                  @"image/*"
-                                                                  ]
-                                                                 ];
-    });
-    
-    return httpManager;
-}
-
-#pragma makr - Start listening for changes in the network connection during running
-
-+ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
-        [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-            switch (status) {
-                case AFNetworkReachabilityStatusUnknown:
-                    networkStatus ? networkStatus(StatusUnknown) : nil;
-                    LSLog(@"Unknown network...");
-                    break;
-                case AFNetworkReachabilityStatusNotReachable:
-                    networkStatus ? networkStatus(StatusNotReachable) : nil;
-                    LSLog(@"No internet...");
-                    break;
-                case AFNetworkReachabilityStatusReachableViaWWAN:
-                    networkStatus ? networkStatus(StatusReachableViaWWAN) : nil;
-                    LSLog(@"Mobile phone network...");
-                    break;
-                case AFNetworkReachabilityStatusReachableViaWiFi:
-                    networkStatus ? networkStatus(StatusReachableViaWiFi) : nil;
-                    LSLog(@"WIFI...");
-                    break;
-            }
-        }];
-        [mgr startMonitoring];
-    });
-}
-
-+ (NSString *)strUTF8Encoding:(NSString *)str{
-    return  [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:str]];
 }
 
 # pragma mark - uploadFile
@@ -326,6 +319,10 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     [dataM appendData:[end dataUsingEncoding:NSUTF8StringEncoding]];
     
     return dataM.copy;
+}
+
++ (NSString *)strUTF8Encoding:(NSString *)str{
+    return  [str stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:str]];
 }
 
 @end
