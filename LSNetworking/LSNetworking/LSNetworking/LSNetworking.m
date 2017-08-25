@@ -19,7 +19,6 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 
 
 - (void)dealloc{
-    
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
 
