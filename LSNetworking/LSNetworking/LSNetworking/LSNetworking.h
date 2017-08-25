@@ -44,6 +44,8 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  Whether there is a network
  - Thanks for the author
  - The implementation of this function reference from the https://github.com/jkpang/PPNetworkHelper
+
+ @return Whether there is a network
  */
 + (BOOL)isNetwork;
 
