@@ -41,6 +41,13 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
 @interface LSNetworking : NSObject
 
 /**
+ Whether there is a network
+ - Thanks for the author
+ - The implementation is referenced from https://github.com/jkpang/PPNetworkHelper
+ */
++ (BOOL)isNetwork;
+
+/**
  Singleton
 
  @return Self - Singleton

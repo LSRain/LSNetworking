@@ -33,6 +33,10 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return handler;
 }
 
++ (BOOL)isNetwork {
+    return [AFNetworkReachabilityManager sharedManager].reachable;
+}
+
 + (NSMutableArray *)tasks{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
