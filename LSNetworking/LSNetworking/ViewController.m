@@ -19,24 +19,11 @@
 
 @implementation ViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor redColor];
-    // Detects network status
-    [LSNetworking checkNetStatusWithBlock:^(LSNetworkStatusType status) {
-        NSLog(@"current netWork: %zd", status);
-    }];
-    
-    /*
-     Whether there is a network
-     - Where the delay of 0.1s and then the implementation is because the program has just started, may be related to the completion of the network service has not yet completed (also may be AFN BUG)
-     - Cause the demo to detect the network status is not correct, this is only to demonstrate the functionality of the demo, in actual use can be used directly to determine the one-time network, do not have to do delay delay operation
-     */
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSLog(@"\n Whether there is a network ~> %zd", [LSNetworking isNetwork]);
-    });
-
     /*
      demo 
         - Please replace the correct URL and parameters

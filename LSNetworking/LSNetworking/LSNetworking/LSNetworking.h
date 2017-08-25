@@ -10,7 +10,34 @@
 #import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
-/// network status
+/**
+ `LSNetworking` is Provides commonly used network processing, network status monitoring, data requests, file / picture upload and download, etc.
+ 
+ ## Introduction
+ Provides the usual network processing
+    * The network request encapsulates[AFN]( https://github.com/AFNetworking/AFNetworking ), and the current version is `3.1.0`.
+    * File upload package `NSURLSession`.
+ 
+ ## Scenes
+    * Network status monitoring
+    * `GET / POST` data request
+    * `Upload / download` file / picture
+ 
+ ## Network Reachability Monitoring
+    - `checkNetStatusWithBlock:`
+    - `isNetwork`
+ 
+ Note that if you use `isNetwork` to get the current network status, then you need to have a delay, and before that, you need to call`checkNetStatusWithBlock:`this callback to open the network monitoring. So the right way is this Two methods are used together.
+
+ */
+
+#pragma mark - Typedef definition
+
+/**
+ network status
+
+ - StatusUnknown: Network state enumeration
+ */
 typedef NS_ENUM(NSUInteger, LSNetworkStatusType){
     StatusUnknown           = -1,   // Unknown network
     StatusNotReachable      = 0,    // No internet
@@ -42,9 +69,7 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
 
 /**
  Whether there is a network
- - Thanks for the author
- - The implementation of this function reference from the https://github.com/jkpang/PPNetworkHelper
-
+ 
  @return Whether there is a network
  */
 + (BOOL)isNetwork;
