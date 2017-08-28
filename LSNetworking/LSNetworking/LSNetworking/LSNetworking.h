@@ -73,6 +73,12 @@ typedef NSURLSessionTask LSURLSessionTask;
 
 typedef void(^LSResponseSuccess)(id response);
 typedef void(^LSResponseFail)(NSError *error);
+/** 
+ Upload or download progress
+    - Progress.completedUnitCount:Current size 
+    - Progress.totalUnitCount:Total size
+ */
+typedef void(^LSHttpProgress)(NSProgress *progress);
 typedef void(^LSUploadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
 typedef void(^LSDownloadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
 /// Block of Network State
@@ -161,6 +167,27 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
                               failure:(LSResponseFail )fail;
 
 /**
+ *  Single file upload
+ *
+ *  @param URL        Request address
+ *  @param parameters Request parameter
+ *  @param name       The file corresponds to the field on the server
+ *  @param filePath   File the local sandbox path
+ *  @param progress   Upload progress information
+ *  @param success    Request a successful callback
+ *  @param failure    Request a failed callback
+ *
+ *  @return The returned object can cancel the request and call the cancel method
+ */
++ (__kindof NSURLSessionTask *)uploadFileWithURL:(NSString *)URL
+                                      parameters:(NSDictionary *)parameters
+                                            name:(NSString *)name
+                                        filePath:(NSString *)filePath
+                                        progress:(LSHttpProgress)progress
+                                         success:(LSResponseSuccess)success
+                                         failure:(LSResponseFail)failure;
+
+/**
  Multi-file upload, you can upload text messages
  
  @param URLString      File upload address
@@ -172,16 +199,5 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
                   serverFileName:(NSString *)serverFileName
                        filePaths:(NSArray *)filePaths
                         textDict:(NSDictionary *)textDict;
-
-/**
- Single file upload, can not upload text information
- 
- @param URLString      File upload address
- @param serverFileName The server receives the field name of the file
- @param filePath       The path to the file
- */
-- (void)uploadFileWithURLString:(NSString *)URLString
-                 serverFileName:(NSString *)serverFileName
-                       filePath:(NSString *)filePath;
 
 @end

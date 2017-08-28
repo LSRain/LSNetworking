@@ -14,7 +14,10 @@
 # define LSLog(...)
 #endif
 
+#define NSStringFormat(format,...) [NSString stringWithFormat:format,##__VA_ARGS__]
+
 static NSMutableArray<NSURLSessionDataTask *> *tasks;
+static BOOL _isDebugLog;   // Whether the log printing has been turned on
 @implementation LSNetworking
 
 
@@ -268,11 +271,50 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
 
 # pragma mark - uploadFile
 
-- (void)uploadFileWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePath:(NSString *)filePath{
-    [self uploadFilesWithURLString:URLString serverFileName:serverFileName filePaths:@[filePath] textDict:nil];
++ (NSString *)jsonToString:(id)data {
+    if(!data) { return nil; }
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
-- (void)uploadFilesWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePaths:(NSArray *)filePaths textDict:(NSDictionary *)textDict{
++ (NSURLSessionTask *)uploadFileWithURL:(NSString *)URL
+                             parameters:(NSDictionary *)parameters
+                                   name:(NSString *)name
+                               filePath:(NSString *)filePath
+                               progress:(LSHttpProgress)progress
+                                success:(LSResponseSuccess)success
+                                failure:(LSResponseFail)failure{
+    
+    NSURLSessionTask *sessionTask = [[self getAFManager] POST:URL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        NSError *error = nil;
+        [formData appendPartWithFileURL:[NSURL URLWithString:filePath] name:name error:&error];
+        (failure && error) ? failure(error) : nil;
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        // Upload progress
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            progress ? progress(uploadProgress) : nil;
+        });
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        LSLog(@"%@",_isDebugLog ? NSStringFormat(@"responseObject = %@",[self jsonToString:responseObject]) : @"LSNetworking Log printing has been turned off");
+        
+        [[self tasks] removeObject:task];
+        success ? success(responseObject) : nil;
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        LSLog(@"%@",_isDebugLog ? NSStringFormat(@"error = %@",error) : @"LSNetworking Log printing has been turned off");
+        
+        [[self tasks] removeObject:task];
+        failure ? failure(error) : nil;
+    }];
+    sessionTask ? [[self tasks] addObject:sessionTask] : nil ;
+    
+    return sessionTask;
+}
+
+- (void)uploadFilesWithURLString:(NSString *)URLString
+                  serverFileName:(NSString *)serverFileName
+                       filePaths:(NSArray *)filePaths
+                        textDict:(NSDictionary *)textDict{
     NSURL *URL = [NSURL URLWithString:URLString];
     
     NSMutableURLRequest *requestM = [NSMutableURLRequest requestWithURL:URL];
