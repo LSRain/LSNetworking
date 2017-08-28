@@ -99,7 +99,11 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @param fail fail
  @return Request the task object
  */
-+ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
++ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod
+                                WithUrl:(NSString *)url
+                                 params:(NSDictionary *)params
+                                success:(LSResponseSuccess)success
+                                   fail:(LSResponseFail)fail;
 
 #pragma mark - Network monitoring
 
@@ -131,7 +135,14 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @param fail fail
  @return Request the task object
  */
-+ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail;
++ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr
+                                   url:(NSString *)url
+                              filename:(NSString *)filename
+                                 names:(NSArray *)nameArr
+                                params:(NSDictionary *)params
+                              progress:(LSUploadProgress)progress
+                               success:(LSResponseSuccess)success
+                                  fail:(LSResponseFail)fail;
 
 /**
  Download the file method
@@ -143,7 +154,11 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @param fail fail
  @return Request the task object
  */
-+ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail;
++ (LSURLSessionTask *)downloadWithUrl:(NSString *)url
+                           saveToPath:(NSString *)saveToPath
+                             progress:(LSDownloadProgress)progressBlock
+                              success:(LSResponseSuccess)success
+                              failure:(LSResponseFail )fail;
 
 /**
  Multi-file upload, you can upload text messages
@@ -153,7 +168,10 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @param filePaths      Multi-file path collection
  @param textDict       Multi-file upload when the text information
  */
-- (void)uploadFilesWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePaths:(NSArray *)filePaths textDict:(NSDictionary *)textDict;
+- (void)uploadFilesWithURLString:(NSString *)URLString
+                  serverFileName:(NSString *)serverFileName
+                       filePaths:(NSArray *)filePaths
+                        textDict:(NSDictionary *)textDict;
 
 /**
  Single file upload, can not upload text information
@@ -162,6 +180,8 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  @param serverFileName The server receives the field name of the file
  @param filePath       The path to the file
  */
-- (void)uploadFileWithURLString:(NSString *)URLString serverFileName:(NSString *)serverFileName filePath:(NSString *)filePath;
+- (void)uploadFileWithURLString:(NSString *)URLString
+                 serverFileName:(NSString *)serverFileName
+                       filePath:(NSString *)filePath;
 
 @end

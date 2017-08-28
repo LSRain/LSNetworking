@@ -196,7 +196,7 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return url ? sessionTask : nil;
 }
 
-+ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress )progressBlock success:(LSResponseSuccess )success failure:(LSResponseFail )fail{
++ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress)progressBlock success:(LSResponseSuccess)success failure:(LSResponseFail )fail{
     if (url == nil) {
         return nil;
     }
