@@ -13,6 +13,9 @@
 /**
  `LSNetworking` is Provides commonly used network processing, network status monitoring, data requests, file / picture upload and download, etc.
  
+ ## About
+ If you want to get the latest features or suggestions on the framework, you can visit [LSNetworking]( https://github.com/LSRain/LSNetworking ) and tell me, thank you.
+ 
  ## Introduction
  Provides the usual network processing
     * The network request encapsulates[AFN]( https://github.com/AFNetworking/AFNetworking ), and the current version is `3.1.0`.
@@ -169,7 +172,7 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
                            saveToPath:(NSString *)saveToPath
                              progress:(LSDownloadProgress)progressBlock
                               success:(LSResponseSuccess)success
-                              failure:(LSResponseFail )fail;
+                              failure:(LSResponseFail)fail;
 
 /**
  *  Single file upload

@@ -35,7 +35,7 @@ static BOOL _isDebugLog;
     return handler;
 }
 
-+ (void)openDebugLog {
++ (void)openDebugLog{
     _isDebugLog = YES;
 }
 
@@ -44,6 +44,7 @@ static BOOL _isDebugLog;
     dispatch_once(&onceToken, ^{
         tasks = [[NSMutableArray alloc] init];
     });
+    
     return tasks;
 }
 
@@ -140,7 +141,7 @@ static BOOL _isDebugLog;
 
 #pragma makr - Start listening for changes in the network connection during running
 
-+ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus {
++ (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
@@ -168,7 +169,7 @@ static BOOL _isDebugLog;
     });
 }
 
-+ (BOOL)isNetwork {
++ (BOOL)isNetwork{
     return [AFNetworkReachabilityManager sharedManager].reachable;
 }
 
@@ -218,7 +219,7 @@ static BOOL _isDebugLog;
                            saveToPath:(NSString *)saveToPath
                              progress:(LSDownloadProgress)progressBlock
                               success:(LSResponseSuccess)success
-                              failure:(LSResponseFail )fail{
+                              failure:(LSResponseFail)fail{
     if (url == nil) {
         return nil;
     }
@@ -237,19 +238,18 @@ static BOOL _isDebugLog;
                 progressBlock(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
             }
         });
-        
     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         if (!saveToPath) {
             NSURL *downloadURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
             LSLog(@"Default path--%@",downloadURL);
-            return [downloadURL URLByAppendingPathComponent:[response suggestedFilename]];
             
+            return [downloadURL URLByAppendingPathComponent:[response suggestedFilename]];
         }else{
             NSURL *downloadURL = [NSURL fileURLWithPath:saveToPath];
             LSLog(@"Target download path--%@",downloadURL);
+            
             return [downloadURL URLByAppendingPathComponent:[response suggestedFilename]];
         }
-        
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         [[self tasks] removeObject:sessionTask];
         if (error == nil) {
@@ -263,7 +263,6 @@ static BOOL _isDebugLog;
             }
         }
     }];
-    
     // start download
     [sessionTask resume];
     if (sessionTask) {
@@ -275,9 +274,10 @@ static BOOL _isDebugLog;
 
 # pragma mark - uploadFile
 
-+ (NSString *)jsonToString:(id)data {
++ (NSString *)jsonToString:(id)data{
     if(!data) { return nil; }
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
+    
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
@@ -288,7 +288,6 @@ static BOOL _isDebugLog;
                                progress:(LSHttpProgress)progress
                                 success:(LSResponseSuccess)success
                                 failure:(LSResponseFail)failure{
-    
     NSURLSessionTask *sessionTask = [[self getAFManager] POST:URL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSError *error = nil;
         [formData appendPartWithFileURL:[NSURL URLWithString:filePath] name:name error:&error];
@@ -300,13 +299,10 @@ static BOOL _isDebugLog;
         });
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         LSLog(@"%@",_isDebugLog ? NSStringFormat(@"responseObject = %@",[self jsonToString:responseObject]) : @"LSNetworking Log printing has been turned off");
-        
         [[self tasks] removeObject:task];
         success ? success(responseObject) : nil;
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         LSLog(@"%@",_isDebugLog ? NSStringFormat(@"error = %@",error) : @"LSNetworking Log printing has been turned off");
-        
         [[self tasks] removeObject:task];
         failure ? failure(error) : nil;
     }];
