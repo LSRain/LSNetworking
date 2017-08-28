@@ -17,7 +17,7 @@
 #define NSStringFormat(format,...) [NSString stringWithFormat:format,##__VA_ARGS__]
 
 static NSMutableArray<NSURLSessionDataTask *> *tasks;
-static BOOL _isDebugLog;   // Whether the log printing has been turned on
+static BOOL _isDebugLog;
 @implementation LSNetworking
 
 
@@ -33,6 +33,10 @@ static BOOL _isDebugLog;   // Whether the log printing has been turned on
     });
     
     return handler;
+}
+
++ (void)openDebugLog {
+    _isDebugLog = YES;
 }
 
 + (NSMutableArray *)tasks{

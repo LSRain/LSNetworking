@@ -93,6 +93,11 @@ typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
  */
 + (LSNetworking *)sharedNetworking;
 
+/**
+ Whether the log printing has been turned on
+ */
++ (void)openDebugLog;
+
 #pragma mark - Network request
 
 /**
