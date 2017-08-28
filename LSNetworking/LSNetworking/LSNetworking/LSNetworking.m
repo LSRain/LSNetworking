@@ -72,8 +72,7 @@ static BOOL _isDebugLog;
         
         httpManager.requestSerializer.stringEncoding          = NSUTF8StringEncoding;
         httpManager.requestSerializer.timeoutInterval         = 30;
-        httpManager.responseSerializer.acceptableContentTypes = [
-                                                                 NSSet setWithArray:
+        httpManager.responseSerializer.acceptableContentTypes = [NSSet setWithArray:
                                                                  @[
                                                                    @"application/json",
                                                                    @"text/html",
