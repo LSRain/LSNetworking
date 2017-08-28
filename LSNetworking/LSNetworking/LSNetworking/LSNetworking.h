@@ -50,25 +50,30 @@
 #pragma mark - Typedef definition
 
 /**
- network status
+ Network status ENUM
 
- - StatusUnknown: Network state enumeration
+ - StatusUnknown: Unknown network
+ - StatusNotReachable: No internet
+ - StatusReachableViaWWAN: Mobile phone network
+ - StatusReachableViaWiFi: WIFI
  */
 typedef NS_ENUM(NSUInteger, LSNetworkStatusType){
-    StatusUnknown           = -1,   // Unknown network
-    StatusNotReachable      = 0,    // No internet
-    StatusReachableViaWWAN  = 1,    // Mobile phone network
-    StatusReachableViaWiFi  = 2     // WIFI
+    StatusUnknown           = -1,
+    StatusNotReachable      = 0,
+    StatusReachableViaWWAN  = 1,
+    StatusReachableViaWiFi  = 2
 };
 
 /**
- * Request Mode
- * GET OR POST
+ Request Mode ENUM
+
+ - GET: GET Request
+ - POST: POST Request
  */
-typedef enum HttpMethod {
+typedef NS_ENUM(NSUInteger, LSHTTPMethod) {
     GET,
     POST
-} LSHTTPMethod;
+};
 
 typedef NSURLSessionTask LSURLSessionTask;
 
@@ -76,15 +81,23 @@ typedef NSURLSessionTask LSURLSessionTask;
 
 typedef void(^LSResponseSuccess)(id response);
 typedef void(^LSResponseFail)(NSError *error);
-/** 
+
+/**
  Upload or download progress
-    - Progress.completedUnitCount:Current size 
-    - Progress.totalUnitCount:Total size
+ - Progress.completedUnitCount:Current size
+ - Progress.totalUnitCount:Total size
+ 
+ @param progress progress
  */
 typedef void(^LSHttpProgress)(NSProgress *progress);
 typedef void(^LSUploadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
 typedef void(^LSDownloadProgress)(int64_t bytesProgress, int64_t totalBytesProgress);
-/// Block of Network State
+
+/**
+ Block of Network State
+
+ @param status Network State
+ */
 typedef void(^LSNetworkStatus)(LSNetworkStatusType status);
 
 @interface LSNetworking : NSObject

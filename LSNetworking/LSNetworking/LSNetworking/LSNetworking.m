@@ -271,13 +271,6 @@ static BOOL _isDebugLog;
 
 # pragma mark - uploadFile
 
-+ (NSString *)jsonToString:(id)data{
-    if(!data) { return nil; }
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    
-    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-}
-
 + (NSURLSessionTask *)uploadFileWithURL:(NSString *)URL
                              parameters:(NSDictionary *)parameters
                                    name:(NSString *)name
@@ -373,6 +366,15 @@ static BOOL _isDebugLog;
     [dataM appendData:[end dataUsingEncoding:NSUTF8StringEncoding]];
     
     return dataM.copy;
+}
+
+#pragma mark - Tools
+
++ (NSString *)jsonToString:(id)data{
+    if(!data) { return nil; }
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
+    
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
 + (NSString *)strUTF8Encoding:(NSString *)str{
