@@ -40,7 +40,11 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return tasks;
 }
 
-+ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod WithUrl:(NSString *)url params:(NSDictionary *)params success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
++ (LSURLSessionTask *)getOrPostWithType:(LSHTTPMethod)httpMethod
+                                WithUrl:(NSString *)url
+                                 params:(NSDictionary *)params
+                                success:(LSResponseSuccess)success
+                                   fail:(LSResponseFail)fail{
     return [self baseRequestType:httpMethod url:url params:params success:success fail:fail];
 }
 
@@ -161,7 +165,14 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return [AFNetworkReachabilityManager sharedManager].reachable;
 }
 
-+ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr url:(NSString *)url filename:(NSString *)filename names:(NSArray *)nameArr params:(NSDictionary *)params progress:(LSUploadProgress)progress success:(LSResponseSuccess)success fail:(LSResponseFail)fail{
++ (LSURLSessionTask *)uploadWithImages:(NSArray *)imageArr
+                                   url:(NSString *)url
+                              filename:(NSString *)filename
+                                 names:(NSArray *)nameArr
+                                params:(NSDictionary *)params
+                              progress:(LSUploadProgress)progress
+                               success:(LSResponseSuccess)success
+                                  fail:(LSResponseFail)fail{
     // Is there any Chinese in the address?
     NSString *urlStr=[NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     
@@ -196,7 +207,11 @@ static NSMutableArray<NSURLSessionDataTask *> *tasks;
     return url ? sessionTask : nil;
 }
 
-+ (LSURLSessionTask *)downloadWithUrl:(NSString *)url saveToPath:(NSString *)saveToPath progress:(LSDownloadProgress)progressBlock success:(LSResponseSuccess)success failure:(LSResponseFail )fail{
++ (LSURLSessionTask *)downloadWithUrl:(NSString *)url
+                           saveToPath:(NSString *)saveToPath
+                             progress:(LSDownloadProgress)progressBlock
+                              success:(LSResponseSuccess)success
+                              failure:(LSResponseFail )fail{
     if (url == nil) {
         return nil;
     }
