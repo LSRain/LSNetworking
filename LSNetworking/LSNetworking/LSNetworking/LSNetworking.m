@@ -142,31 +142,28 @@ static BOOL _isDebugLog;
 #pragma makr - Start listening for changes in the network connection during running
 
 + (void)checkNetStatusWithBlock:(LSNetworkStatus)networkStatus{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
-        [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-            switch (status) {
-                case AFNetworkReachabilityStatusUnknown:
-                    networkStatus ? networkStatus(StatusUnknown) : nil;
-                    LSLog(@"Unknown network...");
-                    break;
-                case AFNetworkReachabilityStatusNotReachable:
-                    networkStatus ? networkStatus(StatusNotReachable) : nil;
-                    LSLog(@"No internet...");
-                    break;
-                case AFNetworkReachabilityStatusReachableViaWWAN:
-                    networkStatus ? networkStatus(StatusReachableViaWWAN) : nil;
-                    LSLog(@"Mobile phone network...");
-                    break;
-                case AFNetworkReachabilityStatusReachableViaWiFi:
-                    networkStatus ? networkStatus(StatusReachableViaWiFi) : nil;
-                    LSLog(@"WIFI...");
-                    break;
-            }
-        }];
-        [mgr startMonitoring];
-    });
+    AFNetworkReachabilityManager *mgr = [AFNetworkReachabilityManager sharedManager];
+    [mgr setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        switch (status) {
+            case AFNetworkReachabilityStatusUnknown:
+                networkStatus ? networkStatus(StatusUnknown) : nil;
+                LSLog(@"Unknown network...");
+                break;
+            case AFNetworkReachabilityStatusNotReachable:
+                networkStatus ? networkStatus(StatusNotReachable) : nil;
+                LSLog(@"No internet...");
+                break;
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                networkStatus ? networkStatus(StatusReachableViaWWAN) : nil;
+                LSLog(@"Mobile phone network...");
+                break;
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                networkStatus ? networkStatus(StatusReachableViaWiFi) : nil;
+                LSLog(@"WIFI...");
+                break;
+        }
+    }];
+    [mgr startMonitoring];
 }
 
 + (BOOL)isNetwork{
