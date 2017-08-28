@@ -52,10 +52,10 @@
 /**
  Network status ENUM
 
- - StatusUnknown: Unknown network
- - StatusNotReachable: No internet
- - StatusReachableViaWWAN: Mobile phone network
- - StatusReachableViaWiFi: WIFI
+ - StatusUnknown          : Unknown network
+ - StatusNotReachable     : No internet
+ - StatusReachableViaWWAN : Mobile phone network
+ - StatusReachableViaWiFi : WIFI
  */
 typedef NS_ENUM(NSUInteger, LSNetworkStatusType){
     StatusUnknown           = -1,
@@ -67,8 +67,8 @@ typedef NS_ENUM(NSUInteger, LSNetworkStatusType){
 /**
  Request Mode ENUM
 
- - GET: GET Request
- - POST: POST Request
+ - GET  : GET Request
+ - POST : POST Request
  */
 typedef NS_ENUM(NSUInteger, LSHTTPMethod) {
     GET,

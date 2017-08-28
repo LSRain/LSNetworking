@@ -70,8 +70,8 @@ static BOOL _isDebugLog;
         // Set NSData
         // httpManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         
-        httpManager.requestSerializer.stringEncoding  = NSUTF8StringEncoding;
-        httpManager.requestSerializer.timeoutInterval = 30;
+        httpManager.requestSerializer.stringEncoding          = NSUTF8StringEncoding;
+        httpManager.requestSerializer.timeoutInterval         = 30;
         httpManager.responseSerializer.acceptableContentTypes = [
                                                                  NSSet setWithArray:
                                                                  @[
@@ -93,19 +93,16 @@ static BOOL _isDebugLog;
     // Is there any Chinese in the address?
     NSString *urlStr = [NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     
-    AFHTTPSessionManager *manager=[self getAFManager];
-    LSURLSessionTask *sessionTask=nil;
+    AFHTTPSessionManager *manager = [self getAFManager];
+    LSURLSessionTask *sessionTask = nil;
     switch (type) {
         case GET:
         {
             sessionTask = [manager GET:urlStr parameters:params progress:^(NSProgress * _Nonnull downloadProgress) {
-                
             } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                
                 if (success) {
                     success(responseObject);
                 }
-                
                 [[self tasks] removeObject:sessionTask];
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 if (fail) {
@@ -179,19 +176,19 @@ static BOOL _isDebugLog;
                                success:(LSResponseSuccess)success
                                   fail:(LSResponseFail)fail{
     // Is there any Chinese in the address?
-    NSString *urlStr=[NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
+    NSString *urlStr = [NSURL URLWithString:url] ? url : [self strUTF8Encoding:url];
     
-    AFHTTPSessionManager *manager=[self getAFManager];
+    AFHTTPSessionManager *manager         = [self getAFManager];
     __block LSURLSessionTask *sessionTask = [manager POST:urlStr parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         for (int i = 0; i < imageArr.count; i ++) {
-            UIImage *image = (UIImage *)imageArr[i];
+            UIImage *image    = (UIImage *)imageArr[i];
             NSData *imageData = UIImageJPEGRepresentation(image,1.0);
             NSString *imageFileName = filename;
             if (filename == nil || ![filename isKindOfClass:[NSString class]] || filename.length == 0) {
                 NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                formatter.dateFormat = @"yyyyMMddHHmmss";
-                NSString *str = [formatter stringFromDate:[NSDate date]];
-                imageFileName = [NSString stringWithFormat:@"%@.png", str];
+                formatter.dateFormat       = @"yyyyMMddHHmmss";
+                NSString *str              = [formatter stringFromDate:[NSDate date]];
+                imageFileName              = [NSString stringWithFormat:@"%@.png", str];
             }
             NSString *nameString = (NSString *)nameArr[i];
 
@@ -223,15 +220,11 @@ static BOOL _isDebugLog;
     
     NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     AFHTTPSessionManager *manager = [self getAFManager];
-    
     LSURLSessionTask *sessionTask = nil;
     sessionTask = [manager downloadTaskWithRequest:downloadRequest progress:^(NSProgress * _Nonnull downloadProgress) {
-        
         LSLog(@"Download progress--%.1f",1.0 * downloadProgress.completedUnitCount/downloadProgress.totalUnitCount);
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressBlock) {
-                
                 progressBlock(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
             }
         });
@@ -289,11 +282,13 @@ static BOOL _isDebugLog;
         });
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         LSLog(@"%@",_isDebugLog ? NSStringFormat(@"responseObject = %@",[self jsonToString:responseObject]) : @"LSNetworking Log printing has been turned off");
+        
         [[self tasks] removeObject:task];
         success ? success(responseObject) : nil;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         LSLog(@"%@",_isDebugLog ? NSStringFormat(@"error = %@",error) : @"LSNetworking Log printing has been turned off");
-        [[self tasks] removeObject:task];
+        
+        [[self tasks] removeObject : task];
         failure ? failure(error) : nil;
     }];
     sessionTask ? [[self tasks] addObject:sessionTask] : nil ;
@@ -308,7 +303,7 @@ static BOOL _isDebugLog;
     NSURL *URL = [NSURL URLWithString:URLString];
     
     NSMutableURLRequest *requestM = [NSMutableURLRequest requestWithURL:URL];
-    requestM.HTTPMethod = @"POST";
+    requestM.HTTPMethod           = @"POST";
     // Request the contents of the first inside the Content-Type
     [requestM setValue:@"multipart/form-data; boundary=lsrequest" forHTTPHeaderField:@"Content-Type"];
     
@@ -336,10 +331,13 @@ static BOOL _isDebugLog;
         
         // The beginning of the file delimiter
         [stringM appendString:@"--lsrequest\r\n"];
+        
         // form data
         [stringM appendFormat:@"Content-Disposition: form-data; name=%@; filename=%@\r\n",serverFileName,[obj lastPathComponent]];
+        
         // file type
         [stringM appendString:@"Content-Type: application/octet-stream\r\n"];
+        
         // Line feed
         [stringM appendString:@"\r\n"];
         [dataM appendData:[stringM dataUsingEncoding:NSUTF8StringEncoding]];
